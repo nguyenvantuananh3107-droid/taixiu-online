@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tài Xỉu Online — Demo</title>
+<style>
+:root{--bg:#080d18;--panel:#111a2b;--panel2:#17243a;--line:#263651;--text:#eef4ff;--muted:#91a2bd;--gold:#f5c451;--red:#ed5b65;--blue:#4d91ff;--green:#39c98a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#14223b 0,#080d18 55%);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px max(18px,calc((100vw - 1100px)/2));border-bottom:1px solid var(--line);background:#080d18dd;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.brand{font-weight:900;letter-spacing:.4px}.brand span{color:var(--gold)}.tag{font-size:11px;color:#16130a;background:var(--gold);padding:3px 8px;border-radius:20px;font-weight:800;margin-left:8px}
+nav{display:flex;gap:8px}.btn,button{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}.btn.active,button.primary{background:var(--gold);color:#17130a;border-color:var(--gold)}button:disabled{opacity:.45;cursor:not-allowed}
+main{max-width:1100px;margin:28px auto;padding:0 18px}.notice{border:1px solid #725c27;background:#392e17;color:#ffe6a2;padding:11px 14px;border-radius:12px;margin-bottom:18px;font-size:13px}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}.card{background:linear-gradient(145deg,#142039,#0f1828);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 12px 35px #0003}.muted{color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:1.6px;font-size:11px;color:var(--muted);font-weight:800}.balance{font-size:30px;font-weight:900;color:var(--gold);margin:4px 0}.dice-row{display:flex;justify-content:center;gap:14px;margin:24px 0}.die{width:76px;height:76px;border-radius:17px;background:#f5f7fc;color:#17243a;display:grid;place-items:center;font-size:37px;font-weight:900;box-shadow:inset 0 -5px 0 #cbd3e1,0 8px 20px #0005}.result{text-align:center;font-size:25px;font-weight:900;color:var(--gold);min-height:38px}.bet-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.bet{padding:18px;border-radius:14px;border:2px solid transparent;text-align:center;font-size:20px;font-weight:900;cursor:pointer}.bet small{display:block;font-size:12px;font-weight:500;opacity:.85}.bet.tai{background:#54212b;border-color:#a53b4a}.bet.xiu{background:#173c68;border-color:#326cb1}.bet.selected{outline:3px solid var(--gold);outline-offset:2px}
+input,select{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:#091322;color:var(--text);margin:5px 0 12px;font:inherit}label{font-size:13px;color:var(--muted)}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#0b1423;border:1px solid var(--line);border-radius:12px;padding:13px}.stat strong{display:block;font-size:22px;color:var(--gold)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:700}.scroll{overflow:auto}.hidden{display:none!important}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}h1{font-size:27px;margin:0 0 5px}h2{font-size:18px;margin:0}.small{font-size:12px}.positive{color:var(--green)}.negative{color:var(--red)}.dice-mini{font-size:18px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:28px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.statgrid{grid-template-columns:1fr 1fr 1fr}header{padding:12px 14px}.brand{font-size:14px}nav button{padding:8px 10px;font-size:12px}.card{padding:16px}.die{width:65px;height:65px}}
+</style></head>
+<body>
+<header><div class="brand">🎲 <span>TÀI XỈU</span> ONLINE <b class="tag">DEMO</b></div><nav><button id="playerTab" class="active" onclick="showPage('player')">Người chơi</button><button id="adminTab" onclick="showPage('admin')">Admin</button></nav></header>
+<main>
+<div class="notice">BẢN DEMO — chỉ sử dụng điểm ảo, không nạp/rút tiền thật. Dữ liệu được lưu trên trình duyệt hiện tại; chưa có máy chủ hay bảo mật tài khoản thực tế.</div>
+<section id="playerPage">
+<div class="section-title"><div><h1>Khu vực người chơi</h1><div class="muted small">Chọn Tài hoặc Xỉu và đặt cược bằng điểm ảo.</div></div><div class="stat"><span class="muted small">SỐ DƯ</span><strong id="balance">10.000</strong><span class="muted small">điểm ảo</span></div></div>
+<div class="grid">
+<div class="card">
+<div class="eyebrow">Phiên hiện tại</div><h2 id="roundLabel">#1001</h2>
+<div class="dice-row"><div class="die" id="die1">⚄</div><div class="die" id="die2">⚁</div><div class="die" id="die3">⚂</div></div>
+<div class="result" id="result">Chờ bắt đầu phiên</div><p class="muted small" style="text-align:center">Tổng 4–10: Xỉu · Tổng 11–17: Tài · Bộ ba: Hòa (hoàn điểm)</p>
+<div class="bet-options"><div class="bet tai" id="tai" onclick="choose('Tài')">TÀI<small>Tổng từ 11 đến 17</small></div><div class="bet xiu" id="xiu" onclick="choose('Xỉu')">XỈU<small>Tổng từ 4 đến 10</small></div></div>
+<label for="stake">Số điểm muốn cược</label><input id="stake" type="number" min="1" step="1" value="500">
+<button class="primary" style="width:100%" id="playBtn" onclick="play()">Đặt cược & tung xúc xắc</button>
+<p class="muted small">Tỷ lệ demo: thắng nhận thêm số điểm bằng tiền cược (1:1); thua mất điểm cược; bộ ba hoàn cược.</p>
+</div>
+<div class="card"><div class="section-title"><h2>Tài khoản demo</h2><span class="tag">LOCAL</span></div>
+<label>Tên hiển thị</label><input id="playerName" value="Người chơi 01" maxlength="24">
+<button onclick="saveName()">Lưu tên</button>
+<div style="height:18px"></div><h2>Lịch sử của bạn</h2><div class="scroll"><table><thead><tr><th>Phiên</th><th>Cửa</th><th>Kết quả</th><th>Điểm</th></tr></thead><tbody id="myHistory"><tr><td colspan="4" class="muted">Chưa có lượt chơi</td></tr></tbody></table></div>
+</div></div></section>
+<section id="adminPage" class="hidden">
+<div class="section-title"><div><h1>Quản trị hệ thống</h1><div class="muted small">Bảng điều khiển demo — quyền quản trị chỉ mô phỏng trên thiết bị này.</div></div><span class="tag">ADMIN DEMO</span></div>
+<div id="adminLogin" class="card" style="max-width:430px;margin:auto"><h2>Đăng nhập Admin</h2><p class="muted small">Tài khoản mẫu: <b>admin</b> · Mật khẩu: <b>demo123</b></p><label>Tên đăng nhập</label><input id="adminUser" value="admin"><label>Mật khẩu</label><input id="adminPass" type="password" placeholder="Nhập mật khẩu"><button class="primary" style="width:100%" onclick="loginAdmin()">Đăng nhập</button><p id="loginError" class="negative small"></p></div>
+<div id="adminPanel" class="hidden">
+<div class="statgrid" style="margin-bottom:18px"><div class="stat"><span class="muted small">THÀNH VIÊN DEMO</span><strong id="memberCount">1</strong></div><div class="stat"><span class="muted small">TỔNG LƯỢT</span><strong id="totalGames">0</strong></div><div class="stat"><span class="muted small">TỔNG CƯỢC</span><strong id="totalBets">0</strong></div></div>
+<div class="grid"><div class="card"><h2>Thành viên</h2><div class="scroll"><table><thead><tr><th>Tên</th><th>Số dư</th><th>Trạng thái</th></tr></thead><tbody id="members"></tbody></table></div><div style="height:14px"></div><h2>Điều chỉnh điểm ảo</h2><label>Số điểm (+ cộng / - trừ)</label><input id="adjust" type="number" value="1000"><button onclick="adjustPoints()">Cập nhật điểm</button></div>
+<div class="card"><h2>Thiết lập phiên demo</h2><p class="muted small">Chỉ dùng để kiểm thử giao diện. Kết quả được công khai là kết quả do Admin thiết lập, không phải trò chơi ngẫu nhiên công bằng.</p><label>Kết quả thử nghiệm</label><select id="forcedResult"><option value="random">Ngẫu nhiên</option><option value="tai">Tài (không bộ ba)</option><option value="xiu">Xỉu (không bộ ba)</option><option value="triple">Bộ ba (hòa)</option></select><button class="primary" style="width:100%;margin-top:6px" onclick="saveSetting()">Lưu thiết lập phiên</button><p id="settingStatus" class="muted small"></p><button onclick="logoutAdmin()">Đăng xuất Admin</button></div></div>
+<div class="card" style="margin-top:18px"><h2>Toàn bộ lịch sử</h2><div class="scroll"><table><thead><tr><th>Phiên</th><th>Người chơi</th><th>Cửa cược</th><th>Ba xúc xắc</th><th>Kết quả</th><th>Biến động</th></tr></thead><tbody id="allHistory"></tbody></table></div></div>
+<div class="card" style="margin-top:18px"><h2>Nhật ký quản trị</h2><div id="audit" class="muted small">Chưa có thao tác.</div></div>
+</div></section>
+</main><footer>© Tài Xỉu Online · Giao diện mô phỏng phục vụ học tập và kiểm thử.</footer>
+<script>
+const KEY='tx_demo_v1';
+let state=JSON.parse(localStorage.getItem(KEY)||'null')||{balance:10000,name:'Người chơi 01',round:1001,history:[],setting:'random',audit:[]};
+let selected=null,admin=false;
+const $=id=>document.getElementById(id),fmt=n=>Number(n).toLocaleString('vi-VN');
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render()}
+function render(){
+ $('balance').textContent=fmt(state.balance);$('roundLabel').textContent='#'+state.round;$('playerName').value=state.name;
+ $('myHistory').innerHTML=state.history.length?state.history.slice().reverse().map(h=>`<tr><td>#${h.round}</td><td>${h.pick}</td><td>${h.outcome}</td><td class="${h.delta>=0?'positive':'negative'}">${h.delta>0?'+':''}${fmt(h.delta)}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">Chưa có lượt chơi</td></tr>';
+ $('memberCount').textContent='1';$('totalGames').textContent=state.history.length;$('totalBets').textContent=fmt(state.history.reduce((a,h)=>a+h.stake,0));
+ $('members').innerHTML=`<tr><td>${esc(state.name)}</td><td>${fmt(state.balance)}</td><td class="positive">Hoạt động</td></tr>`;
+ $('allHistory').innerHTML=state.history.length?state.history.slice().reverse().map(h=>`<tr><td>#${h.round}</td><td>${esc(h.name)}</td><td>${h.pick}</td><td>${h.dice.join(' · ')}</td><td>${h.outcome}</td><td class="${h.delta>=0?'positive':'negative'}">${h.delta>0?'+':''}${fmt(h.delta)}</td></tr>`).join(''):'<tr><td colspan="6" class="muted">Chưa có dữ liệu</td></tr>';
+ $('audit').innerHTML=state.audit.length?state.audit.slice().reverse().map(x=>`<div>• ${esc(x)}</div>`).join(''):'Chưa có thao tác.';
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showPage(p){$('playerPage').classList.toggle('hidden',p!=='player');$('adminPage').classList.toggle('hidden',p!=='admin');$('playerTab').classList.toggle('active',p==='player');$('adminTab').classList.toggle('active',p==='admin');}
+function choose(v){selected=v;$('tai').classList.toggle('selected',v==='Tài');$('xiu').classList.toggle('selected',v==='Xỉu')}
+function saveName(){let n=$('playerName').value.trim();if(!n)return alert('Vui lòng nhập tên.');state.name=n;save();alert('Đã lưu tên demo.')}
+function diceFor(mode){
+ let d;
+ if(mode==='triple'){let n=1+Math.floor(Math.random()*6);return [n,n,n]}
+ do{d=[1,2,3].map(()=>1+Math.floor(Math.random()*6))}while((mode==='tai'&&d.reduce((a,b)=>a+b,0)<11)||(mode==='xiu'&&d.reduce((a,b)=>a+b,0)>10)||d[0]===d[1]&&d[1]===d[2]);
+ return d;
+}
+function play(){
+ if(!selected)return alert('Hãy chọn Tài hoặc Xỉu.');let stake=Math.floor(Number($('stake').value));
+ if(!Number.isFinite(stake)||stake<1)return alert('Số điểm cược không hợp lệ.');if(stake>state.balance)return alert('Bạn không đủ điểm ảo.');
+ let mode=state.setting,d=diceFor(mode),sum=d.reduce((a,b)=>a+b,0),triple=d[0]===d[1]&&d[1]===d[2],out=triple?'Hòa':sum>=11?'Tài':'Xỉu',delta=triple?0:(out===selected?stake:-stake);
+ state.balance+=delta;let r=state.round++;
+ state.history.push({round:r,name:state.name,pick:selected,stake,dice:d,outcome:out,delta});
+ ['die1','die2','die3'].forEach((id,i)=>$(id).textContent=['','⚀','⚁','⚂','⚃','⚄','⚅'][d[i]]);
+ $('result').textContent=`${out} · Tổng ${sum} · ${delta>0?'Thắng +'+fmt(delta):delta<0?'Thua '+fmt(-delta):'Hoàn cược'}`;
+ save();choose(null);
+}
+function loginAdmin(){if($('adminUser').value==='admin'&&$('adminPass').value==='demo123'){admin=true;$('adminLogin').classList.add('hidden');$('adminPanel').classList.remove('hidden');$('loginError').textContent='';render()}else $('loginError').textContent='Sai thông tin đăng nhập.'}
+function logoutAdmin(){admin=false;$('adminPanel').classList.add('hidden');$('adminLogin').classList.remove('hidden');$('adminPass').value=''}
+function adjustPoints(){if(!admin)return;let n=Math.trunc(Number($('adjust').value));if(!Number.isFinite(n)||state.balance+n<0)return alert('Giá trị không hợp lệ hoặc số dư không đủ.');state.balance+=n;state.audit.push(`Admin ${n>=0?'cộng':'trừ'} ${fmt(Math.abs(n))} điểm ảo · ${new Date().toLocaleString('vi-VN')}`);save()}
+function saveSetting(){if(!admin)return;state.setting=$('forcedResult').value;let label={random:'Ngẫu nhiên',tai:'Tài thử nghiệm',xiu:'Xỉu thử nghiệm',triple:'Bộ ba thử nghiệm'}[state.setting];state.audit.push(`Đặt chế độ phiên tiếp theo: ${label} · ${new Date().toLocaleString('vi-VN')}`);$('settingStatus').textContent='Đã lưu: '+label;save()}
+render();
+</script></body></html>
